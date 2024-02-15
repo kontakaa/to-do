@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="java">
+    <head>
+        <link re1="stylesheet" href="today.css"/>
+        <meta charset="utf-8">
+        <title>今日すること</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+    
+            #todo-list {
+                max-width: 400px;
+                margin: 20px auto;
+            }
+    
+            #task-input {
+                width: 70%;
+                padding: 8px;
+                margin-right: 8px;
+            }
+    
+            #add-button {
+                color: whitesmoke;
+                background-color: #57e057;
+                padding: 8px;
+                cursor: pointer;
+            }
+
+            .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .task-text {
+            flex-grow: 1;
+        }
+
+        .assessment-buttons {
+            display: flex;
+        }
+        
+
+        .assessment-button {
+            padding: 8px;
+            cursor: pointer;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .assessment-button.parfect {
+            background-color: blue;
+            color: white;
+        }
+
+        .assessment-button.success {
+            background-color: rgb(82, 221, 82);
+            color: white;
+        }
+
+        .assessment-button.warning {
+            background-color: #FFC107;
+            color: black;
+        }
+
+        .assessment-button.danger {
+            background-color: #F44336;
+            color: white;
+        }
+
+        .delete-button {
+            padding: 8px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .delete-button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+
+<div id="todo-list">
+    <h2 id="today-tasks">今日すること</h2>
+    <input type="text" id="task-input" placeholder="新しいタスクを入力">
+    <button id="add-button" onclick="addTask()">追加</button>
+    <ul id="tasks"></ul>
+</div>
+
+<script>
+    var today = new Date();
+    var options = { year: 'numeric', month: 'long', day: 'numeric' };
+    var formattedDate = today.toLocaleDateString('ja-JP', options);
+
+    // 日付を動的に表示
+    var todayTasksHeading = document.getElementById("today-tasks");
+    todayTasksHeading.innerHTML += " - " + formattedDate;
+
+
+    function addTask() {
+        var taskInput = document.getElementById("task-input");
+        var taskText = taskInput.value.trim();
+
+        if (taskText !== "") {
+            var tasksList = document.getElementById("tasks");
+            var newTaskItem = document.createElement("li");
+            newTaskItem.className = "task-item";
+
+            var taskTextElement = document.createElement("span");
+            taskTextElement.className = "task-text";
+            taskTextElement.textContent = taskText;
+            newTaskItem.appendChild(taskTextElement);
+
+            var assessmentButtons = document.createElement("div");
+            assessmentButtons.className = "assessment-buttons";
+
+            var assessmentOptions = ["◎","○", "△", "×"];
+            var assessmentColors = ["perfect","success", "warning", "danger"];
+
+            for (var i = 0; i < assessmentOptions.length; i++) {
+                var assessmentButton = document.createElement("button");
+                assessmentButton.className = "assessment-button " + assessmentColors[i];
+                assessmentButton.textContent = assessmentOptions[i];
+                assessmentButton.onclick = function () {
+                    var assessment = this.textContent;
+                    alert("タスク '" + taskText + "' の達成度: " + assessment);
+                    // ここに達成度を処理するコードを追加することができます。
+                };
+                assessmentButtons.appendChild(assessmentButton);
+            }
+
+            newTaskItem.appendChild(assessmentButtons);
+
+            var deleteButton = document.createElement("button");
+            deleteButton.className = "delete-button";
+            deleteButton.textContent = "削除";
+            deleteButton.onclick = function () {
+                tasksList.removeChild(newTaskItem);
+            };
+            newTaskItem.appendChild(deleteButton);
+
+            tasksList.appendChild(newTaskItem);
+            taskInput.value = "";
+        }
+    }
+</script>
+
+</body>
+</html>
